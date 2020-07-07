@@ -1,22 +1,33 @@
 import requests
 import json
 
-url = "YOUR URL"
 
 class Telegram_bot(object):
     """Telegram bot API"""
 
     def __init__(self, url):
         self.api_url = url
+        self.updates_offset = None
 
     def getUpdates(self, offset=None, limit=100, timeout=0, allowed_updates=[]):
         params = {'offset': offset, 'limit': limit,
                   'timeout': timeout, 'allowed_updates': allowed_updates}
-        response = requests.get(self.api_url + 'getUpdates', data=params)
+        response = requests.get(self.api_url + '/getUpdates', data=params)
         return response.json()
 
-    def setWebhook(self, url, certificate, max_connections, allowed_updates):
-        pass
+    def getLastUpdates(self):
+        self.resp = self.getUpdates(offset=self.updates_offset, timeout=2)
+        if(len(self.resp['result']) != 0):
+            self.updates_offset = self.resp['result'][len(self.resp['result'])-1]['update_id'] + 1
+            return self.resp['result'][len(self.resp['result'])-1]
+        else:
+            return None
+
+    def setWebhook(self, certificate="", max_connections=40, allowed_updates=[]):
+        params = {'certificate': certificate, 'max_connections': max_connections,
+                  'allowed_updates': allowed_updates}
+        response = requests.get(self.api_url + '/setWebhook', data=params)
+        return response.json()
 
     def deleteWebhook(self):
         pass
@@ -34,7 +45,7 @@ class Telegram_bot(object):
              can_read_all_group_messages=False, supports_inline_queries=True):
         params = {'id': id, 'is_bot': is_bot, 'first_name': first_name,
                   'last_name': last_name, 'username': username}
-        response = requests.get(self.api_url + 'User', data=params)
+        response = requests.get(self.api_url + '/User', data=params)
         return response.json()
 
     def Chat(self, id, type, title, username, first_name, last_name, 
@@ -43,5 +54,17 @@ class Telegram_bot(object):
         pass
 
 if __name__ == '__main__':
+    with open("Cats/token.txt") as file:
+        api_token = file.readline()
+
+    url = "https://api.telegram.org/bot" + api_token
+
+    test_text = None
+
     bot = Telegram_bot(url)
-    print(bot.getUpdates())
+
+    while test_text != 'ABC':
+        a = bot.getLastUpdates()
+        print(a)
+        if a != None:
+            test_text = a['message']['text']

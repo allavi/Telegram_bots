@@ -58,6 +58,17 @@ class Telegram_bot(object):
         response = requests.post(self.api_url + '/sendMessage', data=params)
         return response.json()
 
+    def sendPhoto(self, chat_id, photo, photo_url=True):
+        """ if photo_url == True argument photo must be an url else arg photo must be a file """
+        files = {'photo': photo}
+        if photo_url:
+            params = {'chat_id': chat_id, 'photo': photo}
+            response = requests.post(self.api_url + '/sendPhoto', data=params)
+        else:
+            params = {'chat_id': chat_id}
+            response = requests.post(self.api_url + '/sendPhoto', data=params, files=files)
+        return response.json()
+
 
 if __name__ == '__main__':
     with open("Cats/token.txt") as file:
@@ -75,4 +86,5 @@ if __name__ == '__main__':
         if last_update != None:
             last_chat_id = last_update['message']['chat']['id']
             bot.sendMessage(last_chat_id, last_update['message']['text'])
+            bot.sendPhoto(last_chat_id, "https://cdn2.thecatapi.com/images/ba.jpg")
             test_text = last_update['message']['text']

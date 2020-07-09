@@ -23,11 +23,8 @@ class Telegram_bot(object):
         else:
             return None
 
-    def setWebhook(self, certificate="", max_connections=40, allowed_updates=[]):
-        params = {'certificate': certificate, 'max_connections': max_connections,
-                  'allowed_updates': allowed_updates}
-        response = requests.get(self.api_url + '/setWebhook', data=params)
-        return response.json()
+    def setWebhook(self, url, certificate="", max_connections=40, allowed_updates=[]):
+        pass
 
     def deleteWebhook(self):
         pass
@@ -43,10 +40,7 @@ class Telegram_bot(object):
     def User(self, id, is_bot, first_name, last_name="", username="", 
              language_code="", can_join_groups=True, 
              can_read_all_group_messages=False, supports_inline_queries=True):
-        params = {'id': id, 'is_bot': is_bot, 'first_name': first_name,
-                  'last_name': last_name, 'username': username}
-        response = requests.get(self.api_url + '/User', data=params)
-        return response.json()
+        pass
 
     def Chat(self, id, type, title, username, first_name, last_name, 
              photo, description, invite_link, pinned_message, 

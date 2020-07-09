@@ -53,6 +53,12 @@ class Telegram_bot(object):
              permissions, slow_mode_delay, sticker_set_name, can_set_sticker_set):
         pass
 
+    def sendMessage(self, chat_id, text):
+        params = {'chat_id': chat_id, 'text': text}
+        response = requests.post(self.api_url + '/sendMessage', data=params)
+        return response.json()
+
+
 if __name__ == '__main__':
     with open("Cats/token.txt") as file:
         api_token = file.readline()
@@ -64,7 +70,9 @@ if __name__ == '__main__':
     bot = Telegram_bot(url)
 
     while test_text != 'ABC':
-        a = bot.getLastUpdates()
-        print(a)
-        if a != None:
-            test_text = a['message']['text']
+        last_update = bot.getLastUpdates()
+        print(last_update)
+        if last_update != None:
+            last_chat_id = last_update['message']['chat']['id']
+            bot.sendMessage(last_chat_id, last_update['message']['text'])
+            test_text = last_update['message']['text']

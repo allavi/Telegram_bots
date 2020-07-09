@@ -1,6 +1,4 @@
 import requests
-from PIL import Image
-from io import BytesIO
 
 
 url = "https://api.thecatapi.com/v1/images/search"
@@ -38,6 +36,9 @@ class Cats(object):
 
 
 if __name__ == '__main__':
+    from PIL import Image
+    from io import BytesIO
+
     img = Cats(url)
     pic = img.get_img_url()
     print(pic)

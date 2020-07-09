@@ -9,6 +9,3 @@ import bot_api
 
 tg_bot = bot_api.Telegram_bot()
 cat_image = cats_api.Cats()
-
-cat_image
-

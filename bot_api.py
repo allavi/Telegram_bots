@@ -15,8 +15,8 @@ class Telegram_bot(object):
         response = requests.get(self.api_url + '/getUpdates', data=params)
         return response.json()
 
-    def getLastUpdates(self):
-        self.resp = self.getUpdates(offset=self.updates_offset, timeout=2)
+    def getLastUpdates(self, timeout):
+        self.resp = self.getUpdates(offset=self.updates_offset, timeout=timeout)
         if(len(self.resp['result']) != 0):
             self.updates_offset = self.resp['result'][len(self.resp['result'])-1]['update_id'] + 1
             return self.resp['result'][len(self.resp['result'])-1]
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     bot = Telegram_bot(url)
 
     while test_text != 'ABC':
-        last_update = bot.getLastUpdates()
+        last_update = bot.getLastUpdates(10)
         print(last_update)
         if last_update != None:
             last_chat_id = last_update['message']['chat']['id']
